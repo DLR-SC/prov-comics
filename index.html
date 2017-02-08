@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<title>PROV Comics</title>
+
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<link href="css/style.css" rel="stylesheet" type="text/css">
+
+		<script src="http://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+		<script src="js/URI.js" type="text/javascript"></script>
+		<script src="http://provenance.ecs.soton.ac.uk/static/provserver/api.js" type="text/javascript"></script>
+
+		<script src="js/ProvComic.js" type="text/javascript"></script>
+		<script src="js/script.js" type="text/javascript"></script>
+	</head>
+
+	<body>
+
+		<div id="overlay">
+			<div id="loading"></div>
+		</div>
+
+		<div id="page">
+
+			<div id="header">
+
+				<h1 id="page-title"><a href=".">PROV Comics</a></h1>
+
+				<div id="document-selection">
+					<input id="input-username" type="text" placeholder="ProvStore Username" value="rstruminski" required autofocus>
+					<button id="button-list" type="submit">List documents</button>
+
+					<select id="select-documents"></select>
+					<button id="button-select" type="button">Show comic!</button>
+				</div>
+				
+				<div id="provstore-link">
+					View the <a id="document-link" href="#">underlying document at the ProvStore website</a>.
+				</div>
+				
+				<div class="note">
+					<script type="text/javascript">
+						if (window.location.protocol.indexOf("file") > -1) {
+							document.write('<small><strong>Note:</strong> You seem to be viewing this page from a local file. To see the most recent version that will always work with <em><strong>all</strong></em> available example documents, please visit <a href="http://www.struminski.de/provcomics/">http://www.struminski.de/provcomics/</a>.</small>');
+						}
+					</script>
+				</div>
+
+			</div><!-- #header -->	
+
+			<div id="comic"></div><!-- #comic -->
+
+		</div><!-- #page -->
+
+	</body>
+</html>

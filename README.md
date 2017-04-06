@@ -1,2 +1,3 @@
-# provcomics
-Provenance Comics
+# PROV Comics
+
+Automatically generated Provenance Comics

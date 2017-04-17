@@ -6,38 +6,33 @@
  * German Aerospace Center (Deutsches Zentrum für Luft- und Raumfahrt, DLR)
  * in Cologne.
  * 
- * Regina Struminski <regina.struminski@study.hs-duesseldorf.de>
+ * Regina Struminski <regina.struminski@study.hs-duesseldorf.de>, DLR-SC <opensource@dlr.de>
  */
 
 $(window).on('load', function () {
 
-
+  /********** CHORME/FIREFOX XML BUG **********/
 	const usePrefix = navigator.userAgent.indexOf("Firefox") > -1;
 	const querySelectorPrefix =  usePrefix ? "prov\\:": "";
 
 	/********** PROVSTORE **********/
-	var api = new $.provStoreApi();
-	// for authorized access:
-	var api = new $.provStoreApi({
-		username: "rstruminski",
-		key: "4a7ee1435754b528472ba6345499c1b2f860d4a8"
-	});
+	const api = new $.provStoreApi();
 
 	// make a new Comic:
-	var comic = new ProvComic("#comic");
+	const comic = new ProvComic("#comic");
 	/********** URL PARAMETERS **********/
-	var uri = new URI();
-	var urlParams = uri.search(true);
+	const uri = new URI();
+	const urlParams = uri.search(true);
 	// check query string: see if document ID or username are already set
-	var docId = urlParams['docId'];
-	var username = urlParams['username'];
+	let docId = urlParams['docId'];
+	let username = urlParams['username'];
 	// if document ID is set, load the document
 	if (typeof (docId) !== "undefined" && docId !== "" && docId !== null) {
 		loadDoc(docId);
 	}
 
 	/********** INIT **********/
-	var doc = null;
+	let doc = null;
 	// if username is set, write it into text box and fetch user's documents
 	if (typeof (username) !== "undefined" && username !== "" && username !== null) {
 		$("#input-username").val(username);
@@ -151,8 +146,8 @@ $(window).on('load', function () {
 
 	/**
 	 * Comparator for sorting objects alphabetically by their document_name attribute.
-	 * @param Object a The first object.
-	 * @param Object b The second object.
+	 * @param {Object} a The first object.
+	 * @param {Object} b The second object.
 	 * @returns Number 1 if a>b; -1 if b>a; 0 if equal
 	 */
 	function compareByDocName(a, b) {
@@ -173,26 +168,23 @@ $(window).on('load', function () {
 	 ***************************************************************************/
 
 	function createComic() {
-		var activities = getActivities(doc);
+		const activities = getActivities(doc);
 		activities.forEach(function (activity) {
-			var usedEntities = getEntitiesUsedBy(activity.name);
-			activity['usedEntities'] = usedEntities;
-			var createdEntities = getEntitiesCreatedBy(activity.name);
-			activity['createdEntities'] = createdEntities;
-			var softwareAgent = getSoftwareAgent(activity.name);
-			activity['softwareAgent'] = softwareAgent;
+      activity['usedEntities'] = getEntitiesUsedBy(activity.name);
+      activity['createdEntities'] = getEntitiesCreatedBy(activity.name);
+      activity['softwareAgent'] = getSoftwareAgent(activity.name);
 		});
 		displayActivities(activities, comic);
 	}
 
 	function displayActivities(activities, element) {
 
-		var activityNames = ["aggregate", "export", "input", "request", "visualize"];
+		const activityNames = ["aggregate", "export", "input", "request", "visualize"];
 
 		activities.forEach(function (activity) {
 
 			// check activity name against the array
-			for (var i = 0; i < activityNames.length; i++) {
+			for (let i = 0; i < activityNames.length; i++) {
 				// if it is found
 				if (activity.name.indexOf(activityNames[i]) > -1) {
 					switch (activityNames[i]) {
@@ -218,59 +210,59 @@ $(window).on('load', function () {
 	}
 
 	function displayInput(activity, element) {
-		var firstCreatedEntity = activity.createdEntities[0];
+		let firstCreatedEntity = activity.createdEntities[0];
 		if (firstCreatedEntity !== null) {
-			var owner = getOwnerOfType(firstCreatedEntity, "Person");
-			var aPanelGroup = element.addPanelGroup("input");
+      let owner = getOwnerOfType(firstCreatedEntity, "Person");
+      let aPanelGroup = element.addPanelGroup("input");
 			aPanelGroup.addInputPanels(activity, firstCreatedEntity, owner);
 		}
 	}
 
 	function displayDownload(activity, element) {
-		var firstUsedEntity = activity.usedEntities[0];
+		let firstUsedEntity = activity.usedEntities[0];
 		if (firstUsedEntity !== null) {
-			var owner = getOwnerOfType(firstUsedEntity, "Person");
-			var hoster = getOwnerOfType(firstUsedEntity, "Organization");
-			var aPanelGroup = element.addPanelGroup("download");
+      let owner = getOwnerOfType(firstUsedEntity, "Person");
+      let hoster = getOwnerOfType(firstUsedEntity, "Organization");
+      let aPanelGroup = element.addPanelGroup("download");
 			aPanelGroup.addDownloadPanels(activity, firstUsedEntity, owner, hoster);
 		}
 	}
 
 	function displayUpload(activity, element) {
-		var firstCreatedEntity = activity.createdEntities[0];
+    let firstCreatedEntity = activity.createdEntities[0];
 		if (firstCreatedEntity !== null) {
-			var owner = getOwnerOfType(firstCreatedEntity, "Person");
-			var hoster = getOwnerOfType(firstCreatedEntity, "Organization");
-			var aPanelGroup = element.addPanelGroup("upload");
+      let owner = getOwnerOfType(firstCreatedEntity, "Person");
+      let hoster = getOwnerOfType(firstCreatedEntity, "Organization");
+      let aPanelGroup = element.addPanelGroup("upload");
 			aPanelGroup.addUploadPanels(activity, firstCreatedEntity, owner, hoster);
 		}
 	}
 
 	function displayVisualize(activity, element) {
-		var firstCreatedEntity = activity.createdEntities[0];
-		var firstUsedEntity = activity.usedEntities[0];
-		var owner = getOwnerOfType(firstUsedEntity, "Person");
+    let firstCreatedEntity = activity.createdEntities[0];
+    let firstUsedEntity = activity.usedEntities[0];
+    let owner = getOwnerOfType(firstUsedEntity, "Person");
 		if (firstCreatedEntity !== null) {
-			var aPanelGroup = element.addPanelGroup("visualize");
+      let aPanelGroup = element.addPanelGroup("visualize");
 			aPanelGroup.addVisualizePanels(activity, firstUsedEntity, firstCreatedEntity, owner);
 		}
 	}
 
 	function displayExport(activity, element) {
-		var firstCreatedEntity = activity.createdEntities[0];
-		var firstUsedEntity = activity.usedEntities[0];
-		var owner = getOwnerOfType(firstUsedEntity, "Person");
+    let firstCreatedEntity = activity.createdEntities[0];
+    let firstUsedEntity = activity.usedEntities[0];
+    let owner = getOwnerOfType(firstUsedEntity, "Person");
 		if (firstCreatedEntity !== null) {
-			var aPanelGroup = element.addPanelGroup("export");
+      let aPanelGroup = element.addPanelGroup("export");
 			aPanelGroup.addExportPanels(activity, firstUsedEntity, firstCreatedEntity, owner);
 		}
 	}
 
 	function displayAggregate(activity, element) {
-		var firstCreatedEntity = activity.createdEntities[0];
-		var owner = getOwnerOfType(firstCreatedEntity, "Person");
+    let firstCreatedEntity = activity.createdEntities[0];
+    let owner = getOwnerOfType(firstCreatedEntity, "Person");
 		if (firstCreatedEntity !== null) {
-			var aPanelGroup = element.addPanelGroup("aggregate");
+      let aPanelGroup = element.addPanelGroup("aggregate");
 			aPanelGroup.addAggregatePanels(activity, owner);
 		}
 	}
@@ -285,13 +277,13 @@ $(window).on('load', function () {
 
 	/********** GET ACTIVITIES INFO **********/
 	function getActivities(element) {
-		var activities = [];
+		const activities = [];
 		// select all entities that are direct children of element AND
 		// have the attribute prov:id (because all others are just references,
 		// e.g. from wasAssociatedWith)
 		element.find(querySelectorPrefix + "activity[prov\\:id]").each(function () {
-			var activityName = $(this).attr("prov:id");
-			var activityDate = $(this).find(querySelectorPrefix + "startTime").text();
+      let activityName = $(this).attr("prov:id");
+      let activityDate = $(this).find(querySelectorPrefix + "startTime").text();
 			activities.push({name: activityName, time: activityDate});
 		});
 		activities.sort(compareByActivityDate);
@@ -300,8 +292,8 @@ $(window).on('load', function () {
 	
 	/**
 	 * Comparator for sorting objects by their time attribute.
-	 * @param Object a The first object.
-	 * @param Object b The second object.
+	 * @param {Object} a The first object.
+	 * @param {Object} b The second object.
 	 * @returns Number 1 if a>b; -1 if b>a; 0 if equal
 	 */
 	function compareByActivityDate(a, b) {
@@ -317,8 +309,8 @@ $(window).on('load', function () {
 
 	/********** GET AGENTS INFO **********/
 	function getSoftwareAgent(activity) {
-		var softwareAgent = null;
-		var allAgents = getAgentsAssociatedWith(activity);
+    let softwareAgent = null;
+    let allAgents = getAgentsAssociatedWith(activity);
 		allAgents.forEach(function (agent) {
 			if (agent.type.indexOf("SoftwareAgent") > -1) {
 				softwareAgent = agent;
@@ -328,24 +320,24 @@ $(window).on('load', function () {
 	}
 
 	function getAgentsAssociatedWith(activity) {
-		var activityAgents = [];
+		const activityAgents = [];
 		// select agents that were associated with the activity given as parameter
 		doc.find(querySelectorPrefix + "wasAssociatedWith ").find(querySelectorPrefix + "activity[prov\\:ref='" + activity + "']")
 				.each(function () {
-					var agentName = $(this).siblings("prov\\:agent").attr("prov:ref");
-					var agentData = getAgentByName(agentName, $(this).parent().parent());
+          let agentName = $(this).siblings("prov\\:agent").attr("prov:ref");
+          let agentData = getAgentByName(agentName, $(this).parent().parent());
 					activityAgents.push(agentData);
 				});
 		return activityAgents;
 	}
 
 	function getAgentByName(agentName, element) {
-		var agentData = null;
+    let agentData = null;
 		// select entities that were generated by the activity given as parameter
-		var agent = element.find(querySelectorPrefix + "agent[prov\\:id='" + agentName + "']");
-		var label = agent.find(querySelectorPrefix + "label").text();
-		var type = agent.find(querySelectorPrefix + "type").text();
-		var device = agent.find(usePrefix ? "qs\\: " : ""  + "device").text();
+    let agent = element.find(querySelectorPrefix + "agent[prov\\:id='" + agentName + "']");
+    let label = agent.find(querySelectorPrefix + "label").text();
+    let type = agent.find(querySelectorPrefix + "type").text();
+    let device = agent.find(usePrefix ? "qs\\: " : ""  + "device").text();
 		agentData = {name: label, type: type, device: device};
 		return agentData;
 	}
@@ -354,52 +346,51 @@ $(window).on('load', function () {
 
 	/********** GET ENTITIES INFO **********/
 	function getEntitiesCreatedBy(activity) {
-		var generatedEntities = [];
+		const generatedEntities = [];
 		// select entities that were generated by the activity given as parameter
 		doc.find(querySelectorPrefix + "wasGeneratedBy ").find(querySelectorPrefix + "activity[prov\\:ref='" + activity + "']")
 				.each(function () {
-					var entityName = $(this).siblings("prov\\:entity").attr("prov:ref");
-					var role = $(this).siblings("prov\\:role").text();
-					var time = $(this).siblings("prov\\:time").text();
-					var owners = getEntityOwners(entityName, $(this).parent().parent());
-					var type = getEntityType(entityName, $(this).parent().parent());
+          let entityName = $(this).siblings("prov\\:entity").attr("prov:ref");
+          let role = $(this).siblings("prov\\:role").text();
+          let time = $(this).siblings("prov\\:time").text();
+          let owners = getEntityOwners(entityName, $(this).parent().parent());
+          let type = getEntityType(entityName, $(this).parent().parent());
 					generatedEntities.push({name: entityName, role: role, time: time, owners: owners, type: type});
 				});
 		return generatedEntities;
 	}
 
 	function getEntitiesUsedBy(activity) {
-		var usedEntities = [];
+		const usedEntities = [];
 		// select entities that were used  by the activity given as parameter
 		doc.find(querySelectorPrefix + "used ").find(querySelectorPrefix + "activity[prov\\:ref='" + activity + "']")
 				.each(function () {
-					var entityName = $(this).siblings("prov\\:entity").attr("prov:ref");
-					var role = $(this).siblings("prov\\:role").text();
-					var owners = getEntityOwners(entityName, $(this).parent().parent());
-					var type = getEntityType(entityName, $(this).parent().parent());
+          let entityName = $(this).siblings("prov\\:entity").attr("prov:ref");
+          let role = $(this).siblings("prov\\:role").text();
+          let owners = getEntityOwners(entityName, $(this).parent().parent());
+          let type = getEntityType(entityName, $(this).parent().parent());
 					usedEntities.push({name: entityName, role: role, owners: owners, type: type});
 				});
 		return usedEntities;
 	}
 
 	function getEntityOwners(entity, element) {
-		var attributedAgents = [];
+		const attributedAgents = [];
 		// select agents that the entity given as parameter is attributed to
 		element.find(querySelectorPrefix + "wasAttributedTo ").find(querySelectorPrefix + "entity[prov\\:ref='" + entity + "']")
 				.each(function () {
-					var agentName = $(this).siblings("prov\\:agent").attr("prov:ref");
-					var agentData = getAgentByName(agentName, doc);
+          let agentName = $(this).siblings("prov\\:agent").attr("prov:ref");
+          let agentData = getAgentByName(agentName, doc);
 					attributedAgents.push(agentData);
 				});
 		return attributedAgents;
 	}
 
 	function getOwnerOfType(entity, ownerType) {
-		var owner = null;
+		let owner = null;
 		entity.owners.forEach(function (oneOwner) {
 			if (oneOwner.type === "prov:" + ownerType) {
 				owner = oneOwner;
-				return;
 			}
 		});
 		return owner;
@@ -407,9 +398,8 @@ $(window).on('load', function () {
 
 	function getEntityType(entity, element) {
 		// select agents that the entity given as parameter is attributed to
-		var firstEntity = element.find(querySelectorPrefix + "entity[prov\\:id='" + entity + "']").find(querySelectorPrefix + "type");
-		var type = firstEntity.text();
-		return type;
+    let firstEntity = element.find(querySelectorPrefix + "entity[prov\\:id='" + entity + "']").find(querySelectorPrefix + "type");
+		return firstEntity.text();
 	}
 
 });

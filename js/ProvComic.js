@@ -6,7 +6,7 @@
  * German Aerospace Center (Deutsches Zentrum für Luft- und Raumfahrt, DLR)
  * in Cologne.
  * 
- * Regina Struminski <regina.struminski@study.hs-duesseldorf.de>
+ * Regina Struminski <regina.struminski@study.hs-duesseldorf.de>, DLR-SC <opensource@dlr.de>
  */
 
 var ProvComic = function (element) {

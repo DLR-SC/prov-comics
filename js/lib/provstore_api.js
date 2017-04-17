@@ -1,22 +1,22 @@
 /**
  * ProvStore API jQuery plugin
- * 
+ *
  * Example usage:
- * 
+ *
  * var api = new $.provStoreApi({
  *  username: '<username>',
  *  key: '<api_key>'
  * });
- * 
+ *
  * api.submitDocument("document_name", { "activity": { "a1": {} } }, function(new_document_id){console.log(new_document_id)},
  *    function(error){console.error(error)});
- * 
+ *
  * api.addBundle(<target_document_id>, "bundle_identifier", { "activity": { "a1": {} } },
  *    function(){console.log('added')}, function(error){console.error(error)});
- * 
+ *
  * api.getDocument(<target_document_id>, function(response){console.log(response)}, function(error){console.error(error)});
  * api.deleteDocument(<target_document_id>, function(){console.log('deleted')}, function(error){console.error(error)});
- * 
+ *
  */
 
 (function($, undefined) {
@@ -32,11 +32,24 @@
   };
 
   $.provStoreApi.prototype.request = function(path, data, method, callback, err) {
-	var headers = {'Accept' : "application/json"};
+
+    //Get file ending
+    let  fileEnding = path.split(".").pop();
+
+    //set default application type
+    let applicationType= "json";
+
+    //detect appliaction type based on the provided path
+    if(["xml", "provn", "json", "adjmatrix", "ttl","trig"].indexOf(fileEnding) >= 0 ){
+      applicationType= fileEnding;
+    }
+
+    let headers = {'Accept' : "application/" + applicationType};
+
     if (this.settings.username && this.settings.key) headers['Authorization'] = this._authorizationHeader();
 
     $.ajax(this.settings.location + path, {
-      contentType: "application/json",
+      contentType: "application/" + applicationType,
       headers: headers,
       data: data ? method == 'GET' ? data : JSON.stringify(data) : null,
       type: method || 'GET',
@@ -78,7 +91,7 @@
   };
 
   $.provStoreApi.prototype.addBundle = function(id, identifier, prov_bundle, callback, err) {
-		data = {
+    data = {
       'content': prov_bundle,
       'rec_id': identifier
     }

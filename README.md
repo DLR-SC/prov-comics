@@ -18,5 +18,5 @@ See live demo: https://dlr-sc.github.io/provcomics/
 Tested with:
 
 * Firefox 52
-* Chomre 57
+* Chrome 57
 

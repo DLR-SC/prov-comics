@@ -4,7 +4,7 @@
 
 Automatically generated Provenance Comics
 
-See live demo: https://dlr-sc.github.io/provcomics/
+See live demo: https://dlr-sc.github.io/prov-comics/
 
 
 ## Screenshot

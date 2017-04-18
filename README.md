@@ -1,6 +1,7 @@
 # PROV Comics
 
-[![DOI](https://zenodo.org/badge/81369441.svg)](https://zenodo.org/badge/latestdoi/81369441)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.555927.svg)](https://doi.org/10.5281/zenodo.555927)
+
 
 Automatically generated Provenance Comics
 

@@ -255,13 +255,13 @@ Panel.prototype = function () {
 		var div = $("<div/>");
 		var img = $("<img/>");
 		var cssClass = "";
-		if (typeof (device) === "string") {
+		if (typeof (device) === "string" && (device.indexOf("computer") > -1 || device.indexOf("bracelet") > -1 || device.indexOf("bloodpressure") > -1)) {
 			switch (device) {
-				case "computer" :
+				case "computer":
 					img.attr("src", "img/person-computer.png");
 					cssClass = "personcomputer";
 					break;
-				default :
+				default:
 					img.attr("src", "img/person-" + device + ".png");
 					cssClass = "person";
 					if (device.indexOf("zoom") > -1) {
